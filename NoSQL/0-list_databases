@@ -1,0 +1,26 @@
+// This script connects to MongoDB and lists all databases with their sizes
+
+// Connect to the MongoDB server (default port 27017)
+var conn = new Mongo();
+var db = conn.getDB("admin"); // Connect to admin database for listing all dbs
+
+// Get list of all databases
+var databases = db.adminCommand({listDatabases: 1});
+
+// Print header showing MongoDB version
+print("MongoDB shell version " + version());
+print("connecting to: " + db.getMongo());
+
+// Print server version
+var buildInfo = db.runCommand({buildInfo: 1});
+print("MongoDB server version: " + buildInfo.version);
+
+// Iterate through databases and print their names and sizes
+databases.databases.forEach(function(database) {
+    // Convert size from bytes to GB and format to 3 decimal places
+    var sizeInGB = (database.sizeOnDisk / 1024 / 1024 / 1024).toFixed(3);
+    print(database.name + "\t" + sizeInGB + "GB");
+});
+
+// Print goodbye message
+print("bye");
