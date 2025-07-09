@@ -1,13 +1,10 @@
-// This script connects to MongoDB and lists all database names only
+// MongoDB bağlantısı (mongosh için)
+const conn = Mongo();
+const db = conn.getDB("admin");
 
-// Connect to the MongoDB server
-var conn = new Mongo();
-var db = conn.getDB("admin"); // Connect to admin database for listing all dbs
-
-// Get list of all databases
-var databases = db.adminCommand({listDatabases: 1});
-
-// Iterate through databases and print just their names
-databases.databases.forEach(function(database) {
-    print(database.name);
+// Veritabanlarını listele
+const dbs = db.adminCommand({listDatabases: 1});
+dbs.databases.forEach(db => {
+  const sizeGB = (db.sizeOnDisk / 1024 ** 3).toFixed(3);
+  print(`${db.name}\t${sizeGB}GB`);
 });
